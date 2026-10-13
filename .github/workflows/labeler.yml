@@ -1,0 +1,48 @@
+name: Labeler
+
+on:
+  # フォークからの PR にもラベルを付けるため pull_request_target を使う。
+  # コードはチェックアウトしない(ラベル付けだけを行う)。
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited]
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  pull-request:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+
+  issue:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      NUMBER: ${{ github.event.issue.number }}
+      BODY: ${{ github.event.issue.body }}
+      ASSOCIATION: ${{ github.event.issue.author_association }}
+    steps:
+      # タスクのテンプレートの「種類」の選択を type ラベルにする
+      - name: 種類のラベル
+        run: |
+          type="$(printf '%s\n' "$BODY" | awk '/^### 種類/{f=1; next} f && NF {print; exit}')"
+          case "$type" in
+            feature|fix|docs|chore|refactor|test) gh issue edit "$NUMBER" --add-label "type:$type" ;;
+          esac
+
+      # 開発メンバー以外からの Issue を見分ける
+      - name: 出どころのラベル
+        if: github.event.action == 'opened'
+        run: |
+          case "$ASSOCIATION" in
+            OWNER|MEMBER|COLLABORATOR) ;;
+            *) gh issue edit "$NUMBER" --add-label "from:feedback" ;;
+          esac
