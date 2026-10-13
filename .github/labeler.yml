@@ -1,0 +1,21 @@
+# actions/labeler の設定。PR にブランチ名と変更したファイルからラベルを付ける。
+type:feature:
+  - head-branch: ['^feature/']
+type:fix:
+  - head-branch: ['^fix/']
+type:docs:
+  - head-branch: ['^docs/']
+type:chore:
+  - head-branch: ['^chore/']
+type:refactor:
+  - head-branch: ['^refactor/']
+type:test:
+  - head-branch: ['^test/']
+
+# 実装のディレクトリ構成が決まったら、領域ごとの area:* をここと scripts/setup-github-repo.sh に足す
+area:ci:
+  - changed-files:
+      - any-glob-to-any-file: ['.github/**', 'scripts/**', '.devcontainer/**', 'lefthook.yml', 'commitlint.config.js']
+area:docs:
+  - changed-files:
+      - any-glob-to-any-file: ['docs/**', '*.md']

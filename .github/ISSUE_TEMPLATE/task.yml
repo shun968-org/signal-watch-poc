@@ -1,0 +1,46 @@
+name: タスク
+description: 機能の追加・ドキュメント・CI などの作業
+title: "<種類>: <やること>"
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: 種類
+      description: ブランチ名の type(`<type>/<Issue番号>-<slug>`)になる
+      options:
+        - feature
+        - fix
+        - docs
+        - chore
+        - refactor
+        - test
+    validations:
+      required: true
+  - type: input
+    id: refs
+    attributes:
+      label: 関連する要件・設計
+      description: 要件 ID(REQ-XXX)、機能設計(F-XX)、ADR 番号など
+      placeholder: REQ-007, F-03
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景
+      description: なぜ必要か
+    validations:
+      required: true
+  - type: textarea
+    id: todo
+    attributes:
+      label: やること
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+      description: 何が確かめられたら閉じてよいか
+      placeholder: |
+        - [ ] 
+    validations:
+      required: true

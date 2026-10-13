@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ルールセットの必須チェック。ジョブ名を変えるときは scripts/setup-github-repo.sh も直す
+  repo-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # prepare(lefthook install)は CI では不要なので無効化する
+      - run: npm ci --ignore-scripts
+
+      # 実装の言語が決まったら、型検査・lint・書式・テスト・ビルドをここに足す
+
+      - name: ADR の書式
+        run: |
+          shopt -s nullglob
+          files=(docs/adr/*.md)
+          [ "${#files[@]}" -eq 0 ] || scripts/check-adr-format.sh "${files[@]}"
+
+      # squash merge では PR タイトルがコミットメッセージになる
+      - name: PR タイトルが Conventional Commits か
+        if: github.event_name == 'pull_request'
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$TITLE" | npx --no -- commitlint
+
+      - name: ブランチ名
+        if: github.event_name == 'pull_request'
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          pattern='^(feature|fix|docs|chore|refactor|test)/[0-9]+-[a-z0-9-]+$'
+          [[ "$BRANCH" =~ $pattern ]] || { echo "ブランチ名 '$BRANCH' が <type>/<issue番号>-<slug> に一致しない" >&2; exit 1; }

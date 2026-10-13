@@ -1,0 +1,21 @@
+# Secrets / local env
+.env
+.env.*
+*.pem
+*.key
+
+# Logs / runtime
+*.log
+*.pid
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Node
+node_modules/
+
+# Build / generated
+dist/

@@ -1,0 +1,23 @@
+{
+  "sandbox": {
+    "enabled": false
+  },
+  "permissions": {
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Edit(~/.aws/**)",
+      "Edit(/**/.env*)",
+      "Read(/**/.credentials*)",
+      "Edit(/**/.credentials*)",
+      "Read(/**/secrets/**)",
+      "Edit(/**/secrets/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(printenv:*)",
+      "Bash(env)",
+      "Bash(cat /proc/*/environ*)"
+    ]
+  }
+}

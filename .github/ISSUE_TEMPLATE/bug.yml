@@ -1,0 +1,36 @@
+name: 不具合の報告 / Bug report
+description: 巡回・変更検出・表示などの不具合 / Something is not working
+title: "fix: <不具合の内容 / summary>"
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issue は誰でも見られます。認証情報や、公開されていない情報は書かないでください。
+        Issues are public. Please do not include credentials or non-public information.
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順 / Steps to reproduce
+      description: 対象のサイトの URL や、実行したコマンドがあれば貼る / Paste the target URL or command if possible
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待した動き / Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動き / Actual behavior
+      description: スクリーンショットがあれば貼る / Screenshots are welcome
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 環境 / Environment
+      description: 実行した環境 / Where it ran
+      placeholder: devcontainer / GitHub Actions / Chrome 140
