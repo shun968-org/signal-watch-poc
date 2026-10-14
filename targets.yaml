@@ -1,0 +1,39 @@
+# 監視対象の設定(Notion 基本設計 F-01・データ設計)。
+# 追加・変更は PR で行う。CI が `python -m signal_watch validate-config` で検証する。
+# 対象を増やすときは、そのサイトの利用規約・robots.txt を確認してから足す。
+#
+# 項目:
+#   id                 一意な識別子(英小文字・数字・ハイフン)。スナップショットのファイル名になる
+#   name               表示名(通知の見出し・出典表示)
+#   url                取得する URL(https、許可ドメインのみ)
+#   interval_hours     取得間隔(時間。既定 6、下限 1)
+#   selector           比較範囲の CSS セレクタ(省略時は main、無ければ body)
+#   exclude_selectors  比較から除く要素の CSS セレクタ
+#   exclude_patterns   比較から除く文字列の正規表現
+#   diff_mode          lines(追加・削除とも変更とみなす)/ added_only(追加だけ)
+#   enabled            false なら取得しない
+#
+# selector・exclude_* は、各ページの HTML を見て巡回処理の実装時(マイルストーン 2)に決める。
+
+targets:
+  - id: digital-news
+    name: デジタル庁 新着・更新
+    url: https://www.digital.go.jp/news
+    interval_hours: 6
+    diff_mode: added_only
+
+  # 一覧の本体は Excel の添付ファイル。中身は取得せず、添付のリンク(ファイル名に日付を含む)の変化を検出する
+  - id: digital-account-numbering-designate
+    name: 預貯金口座付番制度に係る一部手続きの対象外となる金融機関
+    url: https://www.digital.go.jp/policies/numbering-on-accounts/designate
+    interval_hours: 12
+
+  - id: digital-jpki-user-list
+    name: マイナンバーカードを用いた公的個人認証サービス(JPKI)導入事業者及び事例一覧
+    url: https://www.digital.go.jp/policies/mynumber/private-business/jpki-introduction/mynumbercard-user-list
+    interval_hours: 12
+
+  - id: digital-electronic-invoice
+    name: 電子インボイス(JP PINT)
+    url: https://www.digital.go.jp/policies/electronic_invoice
+    interval_hours: 12

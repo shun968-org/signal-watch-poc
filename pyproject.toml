@@ -4,13 +4,16 @@ version = "0.1.0"
 description = "公開 Web ページの更新を検出し、変更箇所を提示する仕組みの試作"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0.3",
+]
 
 [dependency-groups]
 dev = [
     "mypy>=1.18",
     "pytest>=8.4",
     "ruff>=0.13",
+    "types-pyyaml>=6.0.12.20260906",
 ]
 
 [build-system]
