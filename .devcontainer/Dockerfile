@@ -1,6 +1,8 @@
 # 言語非依存のベースイメージ。特定言語のランタイムは必要になった時点で
 # devcontainer.json の features に追加する(Node.js は lefthook/commitlint 用に導入済み)。
-# Python(実装言語。ADR-0002)はベースイメージの python3 を使い、uv を下で入れる。
+# Python(実装言語。ADR-0002)は Debian の python3 を apt で入れ、uv を下で入れる。
+# ベースイメージには最小構成の Python(python3-minimal)しか無く、標準ライブラリの一部(shutil など)が欠けるため、
+# python3 パッケージで標準ライブラリ一式を入れる。
 FROM mcr.microsoft.com/devcontainers/base:debian
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -10,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ipset \
         iproute2 \
         dnsutils \
+        python3 \
     && rm -rf /var/lib/apt/lists/*
 
 # 外向き通信のファイアウォール(init-firewall.sh 参照)。
@@ -36,7 +39,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     && rm -rf /var/lib/apt/lists/*
 
 # Python のパッケージ管理(ADR-0003)。バージョンを固定する。上げるときはここを変えて rebuild する。
-# Python 本体はベースイメージ(Debian)の python3 を使い、uv による Python のダウンロードは
+# Python 本体は上で apt から入れた Debian の python3 を使い、uv による Python のダウンロードは
 # devcontainer.json の UV_PYTHON_DOWNLOADS=never で無効にしている(取得先がファイアウォールで遮断されるため)。
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /uvx /usr/local/bin/
 

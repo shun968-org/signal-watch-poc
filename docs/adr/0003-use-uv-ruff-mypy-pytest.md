@@ -9,7 +9,7 @@
 ADR-0002 で巡回処理を Python で実装すると決めたが、パッケージ管理・lint/書式・型検査・テストの道具が決まっていない。
 dev container は外向き通信を許可ドメインに絞っており(PyPI は許可済み)、`vscode` ユーザーは `sudo` で `apt install` できない。
 CI(GitHub Actions)と dev container で同じ依存のバージョンを再現でき、1人で保守できる少ない道具の組み合わせが要る。
-dev container のベースイメージ(Debian)には Python 3.13 が入っているが、pip は無い。
+dev container のベースイメージ(Debian)には最小構成の Python 3.13(`python3-minimal`)しか無く、標準ライブラリの一部(`shutil` など)と pip が欠けている。
 
 ### 検討した選択肢
 
@@ -23,7 +23,7 @@ dev container のベースイメージ(Debian)には Python 3.13 が入ってい
 ## 決定
 
 **パッケージ管理に uv、lint と書式整形に ruff、型検査に mypy(strict)、テストに pytest を使う。
-Python は dev container では OS の Python 3.13 を使い(uv による Python のダウンロードは無効にする)、CI でも 3.13 を使う。**
+Python は dev container では Debian の `python3` パッケージ(3.13)を Dockerfile で入れて使い(uv による Python のダウンロードは無効にする)、CI でも 3.13 を使う。**
 
 判断の根拠:
 
