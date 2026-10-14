@@ -36,6 +36,8 @@ LABELS=(
   "type:test|0e8a16|テストの追加・修正"
   "area:ci|fbca04|CI・devcontainer・リポジトリ設定"
   "area:docs|fbca04|ADR・README などのドキュメント"
+  "area:watch|fbca04|巡回処理(src/・tests/)"
+  "area:config|fbca04|監視対象の設定(targets.yaml)"
   "priority:high|b60205|必須の要件・すぐやる"
   "priority:medium|e99695|推奨の要件・この段階でやる"
   "priority:low|f9d0c4|任意の要件・余裕があればやる"
@@ -43,6 +45,8 @@ LABELS=(
   "severity:major|a52a2a|不具合: 主要な機能の一部が使えない"
   "severity:minor|d4a5a5|不具合: 見た目・文言など"
   "from:feedback|c2e0c6|開発メンバー以外からの報告・要望(自動で付く)"
+  "eval:false-positive|c5def5|PoC 評価: 意味の無い変化を通知した(誤検知)"
+  "eval:missed|c5def5|PoC 評価: 意味のある変化を通知しなかった(検出漏れ)"
   "status:blocked|000000|他の作業や判断待ちで進められない"
 )
 # 種類ラベルと重複する既定ラベル。使われていなければ消す
