@@ -1,5 +1,6 @@
 # 言語非依存のベースイメージ。特定言語のランタイムは必要になった時点で
 # devcontainer.json の features に追加する(Node.js は lefthook/commitlint 用に導入済み)。
+# Python(実装言語。ADR-0002)はベースイメージの python3 を使い、uv を下で入れる。
 FROM mcr.microsoft.com/devcontainers/base:debian
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,6 +34,11 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     && apt-get update \
     && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
+
+# Python のパッケージ管理(ADR-0003)。バージョンを固定する。上げるときはここを変えて rebuild する。
+# Python 本体はベースイメージ(Debian)の python3 を使い、uv による Python のダウンロードは
+# devcontainer.json の UV_PYTHON_DOWNLOADS=never で無効にしている(取得先がファイアウォールで遮断されるため)。
+COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /uvx /usr/local/bin/
 
 RUN mkdir -p /home/vscode/.claude \
     && chown vscode:vscode /home/vscode/.claude

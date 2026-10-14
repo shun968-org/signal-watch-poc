@@ -7,17 +7,24 @@
 
 ## 構成とコマンド
 
-- 実装の言語・構成は未定。決めたら ADR を書き、ここにパッケージ構成とコマンドを足す
+- 実装は Python 3.13(ADR-0002)。道具は uv・ruff・mypy(strict)・pytest(ADR-0003)
+- 構成: `src/signal_watch/`(巡回処理のパッケージ)、`tests/`(pytest)、`pyproject.toml`・`uv.lock`(依存の固定)。
+  モジュールの分け方は Notion の基本設計「システム構成」に従う
+- コマンド(dev container 内):
+  - `uv sync`(依存の導入。CI と同じにするなら `--locked`)
+  - `uv run ruff check` / `uv run ruff format`(lint / 書式整形)
+  - `uv run mypy`(型検査)
+  - `uv run pytest`(テスト)
+- 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
-- CI の `repo-checks` は現在、ADR 書式・PR タイトル・ブランチ名だけを検査する。
-  実装を始めたら型検査・lint・テストなどを `.github/workflows/ci.yml` に足す
+- CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・PR タイトル・ブランチ名を検査する
 
 ## 開発規約
 
 - ブランチ・コミット・PR の規約は [CONTRIBUTING.md](CONTRIBUTING.md)。lefthook と commitlint で機械的に強制される
 - ADR は `docs/adr/`(`managing-adrs` スキル)。要件・設計ドキュメントは `managing-notion-docs` スキル
 - Notion(`ntn`)の認証と権限制御は `managing-notion-docs` スキルの「前提条件」。`NOTION_API_TOKEN`(最小権限の内部インテグレーション)を使い、`ntn login` / `ntn auth` は使わない
-- CI は `.github/workflows/ci.yml`(ADR 書式・PR タイトル・ブランチ名)
+- CI は `.github/workflows/ci.yml`(`repo-checks`。ルールセットの必須チェック)
 - 巡回の対象サイトには、利用規約・robots.txt に従い、アクセス間隔を空けて取得する。
   試作中の取得は少数の対象に限り、短い間隔で繰り返し叩かない
 
