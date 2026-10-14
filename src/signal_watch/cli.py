@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -23,11 +24,17 @@ def main(argv: list[str] | None = None, *, crawler: Crawler | None = None) -> in
     fetch.add_argument("--targets", type=Path, default=DEFAULT_TARGETS_PATH)
     fetch.add_argument("--id", dest="ids", action="append", help="取得する対象の id(複数可)")
     fetch.add_argument("--save-dir", type=Path, help="取得した HTML を <id>.html として保存する")
+    fetch.add_argument(
+        "--summary",
+        type=Path,
+        default=os.environ.get("GITHUB_STEP_SUMMARY"),
+        help="結果の表(Markdown)を追記するファイル。既定は GitHub Actions のジョブサマリー",
+    )
 
     args = parser.parse_args(argv)
     if args.command == "validate-config":
         return _validate_config(args.path)
-    return _fetch(args.targets, args.ids, args.save_dir, crawler or Crawler())
+    return _fetch(args.targets, args.ids, args.save_dir, args.summary, crawler or Crawler())
 
 
 def _load(path: Path) -> list[Target] | None:
@@ -49,7 +56,13 @@ def _validate_config(path: Path) -> int:
     return 0
 
 
-def _fetch(path: Path, ids: list[str] | None, save_dir: Path | None, crawler: Crawler) -> int:
+def _fetch(
+    path: Path,
+    ids: list[str] | None,
+    save_dir: Path | None,
+    summary: Path | None,
+    crawler: Crawler,
+) -> int:
     targets = _load(path)
     if targets is None:
         return 1
@@ -62,19 +75,32 @@ def _fetch(path: Path, ids: list[str] | None, save_dir: Path | None, crawler: Cr
     else:
         targets = [t for t in targets if t.enabled]
 
-    failures = 0
+    rows: list[tuple[str, str, str]] = []  # (結果, id, 詳細)
     for target in targets:
         try:
             result = crawler.fetch(target.url)
         except FetchError as e:
-            failures += 1
-            print(f"失敗\t{target.id}\t{e}")
-            continue
-        if isinstance(result, NotModified):
-            print(f"変更なし\t{target.id}\t304")
-            continue
-        print(f"取得\t{target.id}\t{len(result.content)} バイト\t{result.encoding or '-'}")
-        if save_dir:
-            save_dir.mkdir(parents=True, exist_ok=True)
-            (save_dir / f"{target.id}.html").write_bytes(result.content)
-    return 1 if failures else 0
+            rows.append(("失敗", target.id, str(e)))
+        else:
+            if isinstance(result, NotModified):
+                rows.append(("変更なし", target.id, "304 Not Modified"))
+            else:
+                rows.append(("取得", target.id, f"{len(result.content)} バイト"))
+                if save_dir:
+                    save_dir.mkdir(parents=True, exist_ok=True)
+                    (save_dir / f"{target.id}.html").write_bytes(result.content)
+        print("\t".join(rows[-1]))
+
+    if summary:
+        _write_summary(summary, rows)
+    return 1 if any(status == "失敗" for status, _, _ in rows) else 0
+
+
+def _write_summary(path: Path, rows: list[tuple[str, str, str]]) -> None:
+    lines = ["## 取得結果", "", "| 結果 | 対象 | 詳細 |", "|---|---|---|"]
+    lines += [
+        f"| {status} | `{target_id}` | {detail.replace('|', '\\|')} |"
+        for status, target_id, detail in rows
+    ]
+    with path.open("a", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")

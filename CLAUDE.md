@@ -18,7 +18,8 @@
   - `uv run pytest`(テスト)
   - `uv run python -m signal_watch validate-config`(`targets.yaml` の検証。CI でも走る)
   - `uv run python -m signal_watch fetch [--id <id>] [--save-dir <dir>]`(監視対象を実際に取得する。
-    対象サイトにアクセスするので、試すときは `--id` で絞り、続けて何度も実行しない)
+    対象サイトにアクセスするので、試すときは `--id` で絞り、続けて何度も実行しない。
+    GitHub Actions では `Watch` ワークフローの手動実行で同じことをする)
   - 対話シェルでは `.venv` が自動で有効になる(`~/.bashrc`)ので、`uv run` を省いて `pytest` などと打ってもよい
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
