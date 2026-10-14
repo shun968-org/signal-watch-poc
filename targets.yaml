@@ -13,7 +13,9 @@
 #   diff_mode          lines(追加・削除とも変更とみなす)/ added_only(追加だけ)
 #   enabled            false なら取得しない
 #
-# selector・exclude_* は、各ページの HTML を見て巡回処理の実装時(マイルストーン 2)に決める。
+# selector・exclude_* は 2026-10-14 に各ページの HTML を見て決めた。デジタル庁のページは共通で、
+# 本文が #mainContainer(main 要素)の中にあり、個別ページは article 要素にまとまっている。
+# 最終更新日(.post__date)は比較に含める(本文の更新と一緒に変わるので誤検知にならず、差分の手がかりになる)。
 
 targets:
   - id: digital-news
@@ -21,19 +23,28 @@ targets:
     url: https://www.digital.go.jp/news
     interval_hours: 6
     diff_mode: added_only
+    selector: "#mainContainer"
+    # パンくず・カテゴリ絞り込みのフォーム・ページ送り(全ページ数が毎回変わる)は比較しない
+    exclude_selectors: [".breadcrumbs", "form.views-exposed-form", ".pagination", ".hidden"]
 
   # 一覧の本体は Excel の添付ファイル。中身は取得せず、添付のリンク(ファイル名に日付を含む)の変化を検出する
   - id: digital-account-numbering-designate
     name: 預貯金口座付番制度に係る一部手続きの対象外となる金融機関
     url: https://www.digital.go.jp/policies/numbering-on-accounts/designate
     interval_hours: 12
+    selector: "#mainContainer article"
+    exclude_selectors: [".feedbackForm", ".hidden"]
 
   - id: digital-jpki-user-list
     name: マイナンバーカードを用いた公的個人認証サービス(JPKI)導入事業者及び事例一覧
     url: https://www.digital.go.jp/policies/mynumber/private-business/jpki-introduction/mynumbercard-user-list
     interval_hours: 12
+    selector: "#mainContainer article"
+    exclude_selectors: [".feedbackForm", ".hidden"]
 
   - id: digital-electronic-invoice
     name: 電子インボイス(JP PINT)
     url: https://www.digital.go.jp/policies/electronic_invoice
     interval_hours: 12
+    selector: "#mainContainer article"
+    exclude_selectors: [".feedbackForm", ".hidden"]

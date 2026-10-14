@@ -126,3 +126,35 @@ def test_validate_config_command(tmp_path: Path, capsys: pytest.CaptureFixture[s
     broken.write_text("targets:\n  - id: x\n", encoding="utf-8")
     assert main(["validate-config", str(broken)]) == 1
     assert "name が必要です" in capsys.readouterr().err
+
+
+def test_fetch_command(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    from signal_watch.fetcher import Crawler
+    from signal_watch.politeness import HostThrottle
+    from tests.fake_http import FakeAdapter, FakeClock, Reply, session_with
+
+    adapter = FakeAdapter(
+        {
+            "https://www.digital.go.jp/robots.txt": Reply(status=404),
+            "https://www.digital.go.jp/news": Reply(
+                body=b"<html></html>", headers={"Content-Type": "text/html"}
+            ),
+        }
+    )
+    clock = FakeClock()
+    crawler = Crawler(
+        session_with(adapter), throttle=HostThrottle(clock=clock.clock, sleep=clock.sleep)
+    )
+    targets = str(REPO_ROOT / "targets.yaml")
+
+    code = main(
+        ["fetch", "--targets", targets, "--id", "digital-news", "--save-dir", str(tmp_path)],
+        crawler=crawler,
+    )
+    assert code == 0
+    assert (tmp_path / "digital-news.html").read_bytes() == b"<html></html>"
+    assert "取得\tdigital-news\t13 バイト" in capsys.readouterr().out
+
+    # 他の対象は 404 になるので失敗として数える
+    assert main(["fetch", "--targets", targets], crawler=crawler) == 1
+    assert main(["fetch", "--targets", targets, "--id", "nope"], crawler=crawler) == 1
