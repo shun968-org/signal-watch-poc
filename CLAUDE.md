@@ -46,7 +46,11 @@
   Claude Code は `postCreateCommand` で `npm install -g` する
 - コンテナ内の `vscode` ユーザーの sudo は `init-firewall.sh`だけに限定している(ファイアウォールを外せないようにするため)。
   コンテナ内で `apt install` などはできないので、必要なものは `Dockerfile` か `features` に足す
-- 機密(`.ssh`, `.aws`, `.credentials*`, `secrets/`)は permissions で読み取りを拒否している。
+- `gh` の認証情報(`~/.config/gh`)は名前付きボリュームに置き、rebuild 後も残す。トークンは平文のファイルで残るため、
+  permissions で Read/Edit を拒否している。初回は `gh auth login` → `gh auth refresh -h github.com -s workflow`
+  (CI の設定を変える push に要る)→ `gh auth setup-git` を人が実行する。2回目以降の rebuild では
+  `postCreateCommand` が `gh auth setup-git` を実行する。消したいときは `gh auth logout` かボリュームを削除する
+- 機密(`.ssh`, `.aws`, `~/.config/gh`, `.credentials*`, `secrets/`)は permissions で読み取りを拒否している。
   `.env` はエージェントが読める(編集は拒否、git 管理外)。
   **運用ルール: `.env` にはエージェント向けの認証情報(`NOTION_API_TOKEN`)だけを書く。人間用・本番用の資格情報は置かない**。
   これがセキュリティの前提。`.env` が無いと起動に失敗するため、`initializeCommand` で空ファイルを作る
