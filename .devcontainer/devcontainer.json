@@ -15,14 +15,20 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["anthropic.claude-code", "ms-python.python", "charliermarsh.ruff"]
+      "extensions": ["anthropic.claude-code", "ms-python.python", "charliermarsh.ruff"],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        // ターミナルでの .venv の有効化は ~/.bashrc で行う(Dockerfile)。拡張機能にも有効化させると二重になるため切る
+        "python.terminal.activateEnvironment": false
+      }
     }
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode",
   "mounts": [
-    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume",
+    "source=gh-config-${devcontainerId},target=/home/vscode/.config/gh,type=volume"
   ],
   "containerEnv": {
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
@@ -33,7 +39,7 @@
   "remoteEnv": {
     "PATH": "/home/vscode/.local/bin:${containerEnv:PATH}"
   },
-  "postCreateCommand": "git config --global --add safe.directory /workspace && npm install && npm install -g @anthropic-ai/claude-code && uv sync --locked",
+  "postCreateCommand": "git config --global --add safe.directory /workspace && npm install && npm install -g @anthropic-ai/claude-code && uv sync --locked && (gh auth setup-git || true)",
   "postStartCommand": "sudo /usr/local/bin/init-firewall.sh",
   "waitFor": "postStartCommand"
 }

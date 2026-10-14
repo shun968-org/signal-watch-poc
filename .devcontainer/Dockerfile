@@ -43,13 +43,20 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
 # devcontainer.json の UV_PYTHON_DOWNLOADS=never で無効にしている(取得先がファイアウォールで遮断されるため)。
 COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /uvx /usr/local/bin/
 
-RUN mkdir -p /home/vscode/.claude \
-    && chown vscode:vscode /home/vscode/.claude
+# ボリュームのマウント先(devcontainer.json の mounts)。新しい名前付きボリュームはイメージ側の
+# ディレクトリの所有者を引き継ぐため、先に vscode の所有で作っておく(無いと root 所有になり書き込めない)。
+# ~/.config/gh は gh の認証情報(トークンが平文で入る)を rebuild 後も残すため。
+RUN mkdir -p /home/vscode/.claude /home/vscode/.config/gh \
+    && chown -R vscode:vscode /home/vscode/.claude /home/vscode/.config
 USER vscode
 
 RUN curl -fsSL https://ntn.dev | bash \
     && mkdir -p /home/vscode/.local/bin \
     && NTN_BIN="$(bash -lc 'command -v ntn')" \
     && [ "$NTN_BIN" = "/home/vscode/.local/bin/ntn" ] || ln -sf "$NTN_BIN" /home/vscode/.local/bin/ntn
+
+# 対話シェルを開いたら uv の仮想環境(/workspace/.venv)を有効にする。
+# .venv は postCreateCommand の `uv sync` で作られるので、まだ無いときは何もしない。
+RUN echo '[ -f /workspace/.venv/bin/activate ] && . /workspace/.venv/bin/activate' >> /home/vscode/.bashrc
 
 WORKDIR /workspace

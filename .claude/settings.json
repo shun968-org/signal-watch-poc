@@ -8,6 +8,8 @@
       "Edit(~/.ssh/**)",
       "Read(~/.aws/**)",
       "Edit(~/.aws/**)",
+      "Read(~/.config/gh/**)",
+      "Edit(~/.config/gh/**)",
       "Edit(/**/.env*)",
       "Read(/**/.credentials*)",
       "Edit(/**/.credentials*)",
