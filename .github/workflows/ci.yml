@@ -45,6 +45,9 @@ jobs:
       - name: テスト
         run: uv run pytest
 
+      - name: 監視対象の設定(targets.yaml)
+        run: uv run python -m signal_watch validate-config targets.yaml
+
       - name: ADR の書式
         run: |
           shopt -s nullglob

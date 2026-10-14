@@ -3,22 +3,26 @@
 ## このリポジトリ
 
 公開情報の更新を自動的に検出し、変更された箇所を分かりやすく提示する仕組みの試作(PoC)。
-概要は [README.md](README.md)。技術選定は ADR に残す(`docs/adr/`。まだ1件も無い)。
+概要は [README.md](README.md)。技術選定は ADR に残す(`docs/adr/`)。
 
 ## 構成とコマンド
 
 - 実装は Python 3.13(ADR-0002)。道具は uv・ruff・mypy(strict)・pytest(ADR-0003)
-- 構成: `src/signal_watch/`(巡回処理のパッケージ)、`tests/`(pytest)、`pyproject.toml`・`uv.lock`(依存の固定)。
+- 構成: `src/signal_watch/`(巡回処理のパッケージ)、`tests/`(pytest)、`targets.yaml`(監視対象の設定)、
+  `pyproject.toml`・`uv.lock`(依存の固定)。
   モジュールの分け方は Notion の基本設計「システム構成」に従う
 - コマンド(dev container 内):
   - `uv sync`(依存の導入。CI と同じにするなら `--locked`)
   - `uv run ruff check` / `uv run ruff format`(lint / 書式整形)
   - `uv run mypy`(型検査)
   - `uv run pytest`(テスト)
+  - `uv run python -m signal_watch validate-config`(`targets.yaml` の検証。CI でも走る)
   - 対話シェルでは `.venv` が自動で有効になる(`~/.bashrc`)ので、`uv run` を省いて `pytest` などと打ってもよい
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
-- CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・PR タイトル・ブランチ名を検査する
+- CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・`targets.yaml`・PR タイトル・ブランチ名を検査する
+- 監視対象を増やすときは、そのサイトの利用規約・robots.txt を確認してから `targets.yaml` に足す。
+  新しいドメインは `src/signal_watch/config.py` の `ALLOWED_DOMAINS` と `init-firewall.sh` の両方に足す
 
 ## 開発規約
 
