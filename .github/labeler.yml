@@ -12,10 +12,16 @@ type:refactor:
 type:test:
   - head-branch: ['^test/']
 
-# 実装のディレクトリ構成が決まったら、領域ごとの area:* をここと scripts/setup-github-repo.sh に足す
+# 領域ごとの area:*。足すときは scripts/setup-github-repo.sh の LABELS にも足す
 area:ci:
   - changed-files:
       - any-glob-to-any-file: ['.github/**', 'scripts/**', '.devcontainer/**', 'lefthook.yml', 'commitlint.config.js']
+area:watch:
+  - changed-files:
+      - any-glob-to-any-file: ['src/**', 'tests/**', 'pyproject.toml', 'uv.lock']
+area:config:
+  - changed-files:
+      - any-glob-to-any-file: ['targets.yaml']
 area:docs:
   - changed-files:
       - any-glob-to-any-file: ['docs/**', '*.md']

@@ -39,9 +39,10 @@ GitHub Flow に従う。長く残るブランチは `main` だけで、作業ブ
 | `priority:*` | 手で付ける(要件の必須 / 推奨 / 任意に対応) | 着手順 |
 | `severity:*` | 不具合に手で付ける | 品質の状況 |
 | `from:feedback` | 開発メンバー以外が作った Issue に自動 | 外部からの反応 |
+| `eval:*` | 誤検知(`eval:false-positive`)・検出漏れ(`eval:missed`)の報告に手で付ける | PoC の評価(基本設計 F-09) |
 | `status:blocked` | 手で付ける | 止まっている作業の把握 |
 
-`area:*` は今は `ci`・`docs` だけ。実装の構成が決まったら `.github/labeler.yml` と `scripts/setup-github-repo.sh` に足す。
+`area:*` は `ci`・`docs`・`watch`(巡回処理)・`config`(`targets.yaml`)。領域を足すときは `.github/labeler.yml` と `scripts/setup-github-repo.sh` の両方に足す。
 
 Issue には開発の段階に合わせたマイルストーン(`1. 土台` 〜 `5. 検証`。暫定)を付ける。
 段階ごとの進み具合は、マイルストーンの完了率で見る。
