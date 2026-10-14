@@ -15,7 +15,12 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["anthropic.claude-code", "ms-python.python", "charliermarsh.ruff"]
+      "extensions": ["anthropic.claude-code", "ms-python.python", "charliermarsh.ruff"],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        // ターミナルでの .venv の有効化は ~/.bashrc で行う(Dockerfile)。拡張機能にも有効化させると二重になるため切る
+        "python.terminal.activateEnvironment": false
+      }
     }
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",

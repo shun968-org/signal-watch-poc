@@ -15,6 +15,7 @@
   - `uv run ruff check` / `uv run ruff format`(lint / 書式整形)
   - `uv run mypy`(型検査)
   - `uv run pytest`(テスト)
+  - 対話シェルでは `.venv` が自動で有効になる(`~/.bashrc`)ので、`uv run` を省いて `pytest` などと打ってもよい
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
 - CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・PR タイトル・ブランチ名を検査する

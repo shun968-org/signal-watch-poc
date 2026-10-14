@@ -55,4 +55,8 @@ RUN curl -fsSL https://ntn.dev | bash \
     && NTN_BIN="$(bash -lc 'command -v ntn')" \
     && [ "$NTN_BIN" = "/home/vscode/.local/bin/ntn" ] || ln -sf "$NTN_BIN" /home/vscode/.local/bin/ntn
 
+# 対話シェルを開いたら uv の仮想環境(/workspace/.venv)を有効にする。
+# .venv は postCreateCommand の `uv sync` で作られるので、まだ無いときは何もしない。
+RUN echo '[ -f /workspace/.venv/bin/activate ] && . /workspace/.venv/bin/activate' >> /home/vscode/.bashrc
+
 WORKDIR /workspace
