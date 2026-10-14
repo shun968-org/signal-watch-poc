@@ -1,0 +1,39 @@
+[project]
+name = "signal-watch"
+version = "0.1.0"
+description = "公開 Web ページの更新を検出し、変更箇所を提示する仕組みの試作"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18",
+    "pytest>=8.4",
+    "ruff>=0.13",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.13"
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers"]
+
+[tool.uv]
+# 公開直後の版は取り込まない(壊れた版・乗っ取られた版を避けるため、公開から 2 週間以上経ったものに限る)。
+# 依存を更新するときはこの日付を「今日の 2 週間前」に進めてから `uv lock --upgrade` する。
+exclude-newer = "2026-09-29T00:00:00Z"

@@ -24,7 +24,26 @@ jobs:
       # prepare(lefthook install)は CI では不要なので無効化する
       - run: npm ci --ignore-scripts
 
-      # 実装の言語が決まったら、型検査・lint・書式・テスト・ビルドをここに足す
+      # Python(ADR-0002, ADR-0003)。uv のバージョンは .devcontainer/Dockerfile と揃える
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - run: uv sync --locked
+
+      - name: lint
+        run: uv run ruff check
+
+      - name: 書式
+        run: uv run ruff format --check
+
+      - name: 型検査
+        run: uv run mypy
+
+      - name: テスト
+        run: uv run pytest
 
       - name: ADR の書式
         run: |
