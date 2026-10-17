@@ -1,0 +1,14 @@
+出典:「デジタル庁 新着・更新」(デジタル庁)(https://www.digital.go.jp/news)
+公共データ利用規約(第1.0版)に基づき、signal-watch-poc が本文のテキストを抽出・加工して作成
+
+新着・更新
+- アナログ規制見直しの取組の「新規法令等のデジタル原則適合性確認等プロセス」の資料を更新しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/digital-extraordinary-administrative-research-committee>
+- マイナンバーカード・インフォ（民間事業者向け情報）Vol.156を掲載しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/mynumber/private-business/info>
+- デジタル推進委員向けのデジタル情報をまとめて案内するページ「教える人のためのデジタル情報ひろば」を更新しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/digital_promotion_staff/curation>
+- 医療DXに関するダッシュボードを更新しました 資料 2026年10月16日 <https://www.digital.go.jp/resources/govdashboard/healthcare-dx>
+- 電子処方箋の導入状況に関するダッシュボードを更新しました 資料 2026年10月16日 <https://www.digital.go.jp/resources/govdashboard/electronic-prescription>
+- 自治体が実施する健康・医療・介護分野の事業のデジタル化（PMH）ー医療費助成に関するダッシュボードを更新しました 資料 2026年10月16日 <https://www.digital.go.jp/resources/govdashboard/pmh-medical-expense-subsidies>
+- 保育提供体制に関するダッシュボードを更新しました 資料 2026年10月16日 <https://www.digital.go.jp/resources/govdashboard/childcare>
+- 意見招請：令和9年度マイナアプリおよび PC 版マイナポータルアプリの運用・保守業務一式を掲載しました 調達情報 2026年10月16日 <https://www.digital.go.jp/procurement>
+- 古川デジタル大臣による窓口BPRアドバイザー連絡会議視察の様子を掲載しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/cs-dx/localgovernment-adviser/95074a05-5c23-4db4-8652-050b71043dd2>
+- 古川大臣記者会見（令和8年10月16日）動画を掲載しました 会見 2026年10月16日 <https://www.digital.go.jp/speech/minister-261016-01>
