@@ -38,6 +38,7 @@ class Notice:
     diff_url: str | None = None
     error: str | None = None
     failures: int = 0
+    summary: str | None = None  # AI による要約(F-10)。要約できなかったときは None
 
 
 class NotifyError(Exception):
@@ -54,12 +55,10 @@ def build_message(notice: Notice) -> dict[str, Any]:
         links = [page_link]
         if notice.diff_url:
             links.insert(0, f"<{notice.diff_url}|差分を見る>")
-        blocks = [
-            _header(title),
-            _section(summary),
-            _section(_code_block(notice.excerpt)),
-            _context(" ・ ".join(links)),
-        ]
+        blocks = [_header(title), _section(summary)]
+        if notice.summary:
+            blocks.append(_ai_summary(notice.summary))
+        blocks += [_section(_code_block(notice.excerpt)), _context(" ・ ".join(links))]
     elif notice.kind == "failed":
         title = f"【取得失敗】{notice.name}"
         summary = (
@@ -78,6 +77,11 @@ def build_message(notice: Notice) -> dict[str, Any]:
     else:
         title = "【テスト】signal-watch-poc の通知"
         blocks = [_header(title), _section(f"{when} 通知の設定を確かめるためのテストです。")]
+        blocks.append(
+            _ai_summary(notice.summary)
+            if notice.summary
+            else _context("AI 要約: 要約できませんでした(Watch のログを確認してください)")
+        )
     return {"text": title, "blocks": blocks}
 
 
@@ -102,6 +106,10 @@ def send(
         if response.status_code != 200:
             body = response.text[:200]
             raise NotifyError(f"Slack が HTTP {response.status_code} を返した: {body}")
+
+
+def _ai_summary(text: str) -> dict[str, Any]:
+    return _section(f"*AI による要約*(誤りを含むことがあります)\n{_escape(text)}")
 
 
 def _header(text: str) -> dict[str, Any]:

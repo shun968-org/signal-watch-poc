@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from signal_watch.notifier import Notice, NotifyError, send
 from signal_watch.report import notices_from_results, repository_url, write_results
 from signal_watch.runner import Outcome, TargetResult, run
 from signal_watch.store import SnapshotStore
+from signal_watch.summarizer import SummaryRequest, summarize
 
 DEFAULT_TARGETS_PATH = Path("targets.yaml")
 
@@ -164,13 +166,30 @@ def _run(
 
 def _notify(results_path: Path | None, *, test: bool) -> int:
     if test:
-        notices = [Notice(kind="test", name="", url="", detected_at=datetime.now(UTC))]
+        sample = SummaryRequest(
+            name="テスト用のページ",
+            url="https://www.digital.go.jp/news",
+            excerpt=(
+                "  新着・更新",
+                "+ - テスト用の新しいお知らせを掲載しました 政策 2026年10月17日",
+            ),
+        )
+        notices = [
+            Notice(
+                kind="test",
+                name="",
+                url="",
+                detected_at=datetime.now(UTC),
+                summary=summarize(sample),
+            )
+        ]
     else:
         assert results_path is not None
         notices = notices_from_results(results_path, repository_url())
     if not notices:
         print("通知することはありません")
         return 0
+    notices = [_with_summary(n) for n in notices]
     webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
     if not webhook_url:
         print("環境変数 SLACK_WEBHOOK_URL が設定されていません", file=sys.stderr)
@@ -182,6 +201,14 @@ def _notify(results_path: Path | None, *, test: bool) -> int:
         return 1
     print(f"{len(notices)} 件を Slack に通知しました")
     return 0
+
+
+def _with_summary(notice: Notice) -> Notice:
+    """【変更】の通知に AI 要約を付ける(要約できなければそのまま)。"""
+    if notice.kind != "changed":
+        return notice
+    summary = summarize(SummaryRequest(notice.name, notice.url, notice.excerpt))
+    return replace(notice, summary=summary)
 
 
 def _result_row(result: TargetResult) -> tuple[str, str, str]:

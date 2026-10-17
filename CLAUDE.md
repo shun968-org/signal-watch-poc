@@ -34,6 +34,9 @@
   `Watch` ワークフローだけがコミットする(ルールセットの対象外)。手で編集しない
 - Slack 通知(Incoming Webhook)のアプリは `docs/slack-app-manifest.yml` から作る(手順はファイル冒頭)。
   Webhook URL は GitHub Actions の Secret `SLACK_WEBHOOK_URL` にだけ置く。エージェントは URL を受け取らない
+- AI 要約(ADR-0004)は Claude Code のヘッドレスモードを、サブスクリプションのトークン(Secret `CLAUDE_CODE_OAUTH_TOKEN`)で
+  動かす。**従量課金を発生させないこと。** `ANTHROPIC_API_KEY` などの API キーは Secret・ワークフロー・コードに置かない。
+  `summarizer` は API キー系の環境変数を子プロセスに渡さず、認証方式がサブスクリプションでなければ要約しない。この仕組みを外さない
 - 監視対象を増やすときは、そのサイトの利用規約・robots.txt を確認してから `targets.yaml` に足す。
   新しいドメインは `src/signal_watch/config.py` の `SOURCES`(出典表示も書く) と `init-firewall.sh` の両方に足す
 
