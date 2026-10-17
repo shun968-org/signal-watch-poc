@@ -23,6 +23,9 @@ ALLOWED_DOMAINS=(
   # developers.notion.com(ntn が API バージョン決定に使う)は許可しない。Vercel 上にあり
   # IP が問い合わせごとに変わるため、起動時の名前解決では許可できない。
   # 代わりに devcontainer.json の NOTION_API_VERSION でバージョンを固定している
+  # Slack CLI(slack login やアプリの操作で Slack の API を呼ぶ)
+  slack.com
+  api.slack.com
   # GitHub(IP 範囲は api.github.com/meta から別途追加する)
   objects.githubusercontent.com
   raw.githubusercontent.com
