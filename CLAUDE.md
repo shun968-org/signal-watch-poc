@@ -28,6 +28,8 @@
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
 - CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・`targets.yaml`・PR タイトル・ブランチ名を検査する
+- `Watch` ワークフロー(`.github/workflows/watch.yml`)は JST 9・12・15・18 時台に定期実行し、取得間隔に達した対象を
+  巡回して、変更を `snapshots` に保存し Slack に通知する。手動実行では対象の id 指定とテスト通知ができる
 - `snapshots` ブランチ: 監視対象ごとの抽出テキスト(`targets/<id>.txt`、先頭に出典表示)と実行状態(`state.json`)。
   `Watch` ワークフローだけがコミットする(ルールセットの対象外)。手で編集しない
 - Slack 通知(Incoming Webhook)のアプリは `docs/slack-app-manifest.yml` から作る(手順はファイル冒頭)。
