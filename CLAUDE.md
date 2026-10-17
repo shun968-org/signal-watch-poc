@@ -20,14 +20,18 @@
   - `uv run python -m signal_watch fetch [--id <id>] [--save-dir <dir>]`(監視対象を実際に取得する。
     対象サイトにアクセスするので、試すときは `--id` で絞り、続けて何度も実行しない。
     GitHub Actions では `Watch` ワークフローの手動実行で同じことをする)
+  - `uv run python -m signal_watch run --snapshots <dir> [--id <id>]`(巡回して変更を保存する。`<dir>` は
+    `snapshots` ブランチの作業ディレクトリで、対象ごとにコミットする。push はしない。本番は `Watch` ワークフローが実行する)
   - 対話シェルでは `.venv` が自動で有効になる(`~/.bashrc`)ので、`uv run` を省いて `pytest` などと打ってもよい
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
 - CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・`targets.yaml`・PR タイトル・ブランチ名を検査する
+- `snapshots` ブランチ: 監視対象ごとの抽出テキスト(`targets/<id>.txt`、先頭に出典表示)と実行状態(`state.json`)。
+  `Watch` ワークフローだけがコミットする(ルールセットの対象外)。手で編集しない
 - Slack 通知(Incoming Webhook)のアプリは `docs/slack-app-manifest.yml` から作る(手順はファイル冒頭)。
   Webhook URL は GitHub Actions の Secret `SLACK_WEBHOOK_URL` にだけ置く。エージェントは URL を受け取らない
 - 監視対象を増やすときは、そのサイトの利用規約・robots.txt を確認してから `targets.yaml` に足す。
-  新しいドメインは `src/signal_watch/config.py` の `ALLOWED_DOMAINS` と `init-firewall.sh` の両方に足す
+  新しいドメインは `src/signal_watch/config.py` の `SOURCES`(出典表示も書く) と `init-firewall.sh` の両方に足す
 
 ## 開発規約
 
