@@ -60,6 +60,8 @@
   permissions で Read/Edit を拒否している。初回は `gh auth login` → `gh auth refresh -h github.com -s workflow`
   (CI の設定を変える push に要る)→ `gh auth setup-git` を人が実行する。2回目以降の rebuild では
   `postCreateCommand` が `gh auth setup-git` を実行する。消したいときは `gh auth logout` かボリュームを削除する
+- git の `user.name`・`user.email` は、未設定なら `postCreateCommand` が `.devcontainer/setup-git-identity.sh` で
+  gh のログイン中アカウントから設定する(ログイン名と GitHub の noreply アドレス)。初回の `gh auth login` の後は手で実行する
 - Slack CLI(`slack`)はイメージに入れてある(Dockerfile。公式のインストールスクリプト)。
   `slack login` は人が実行する。認証情報(`~/.slack/credentials.json`)は permissions で Read/Edit を拒否しており、
   rebuild すると消える。通信先の `slack.com`・`api.slack.com` は許可ドメインに入れてある
