@@ -41,6 +41,8 @@ class TargetResult:
     diff: Diff | None = None
     commit: str | None = None  # スナップショットのコミット SHA(差分画面へのリンクに使う)
     notify_failure: bool = False  # 連続失敗が閾値に達した(通知する)
+    error: str | None = None  # 失敗の理由
+    failures: int = 0  # 連続失敗回数
     recovered: bool = False  # 失敗の通知後に回復した(通知する)
 
 
@@ -116,7 +118,14 @@ def _check(
         if notify:
             state.failure_notified = True
         detail = f"{e}(連続 {state.consecutive_failures} 回)"
-        return TargetResult(target, Outcome.FAILED, detail, notify_failure=notify)
+        return TargetResult(
+            target,
+            Outcome.FAILED,
+            detail,
+            notify_failure=notify,
+            error=str(e),
+            failures=state.consecutive_failures,
+        )
 
     recovered = state.failure_notified
     state.consecutive_failures = 0

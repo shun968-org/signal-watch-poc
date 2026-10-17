@@ -5,10 +5,13 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from signal_watch.config import ConfigError, Target, load_targets
 from signal_watch.fetcher import Crawler, FetchError, NotModified
+from signal_watch.notifier import Notice, NotifyError, send
+from signal_watch.report import notices_from_results, repository_url, write_results
 from signal_watch.runner import Outcome, TargetResult, run
 from signal_watch.store import SnapshotStore
 
@@ -44,12 +47,24 @@ def main(argv: list[str] | None = None, *, crawler: Crawler | None = None) -> in
         "--id", dest="ids", action="append", help="この対象だけを取得する(最小間隔 1 時間は守る)"
     )
     run_parser.add_argument("--summary", type=Path, default=os.environ.get("GITHUB_STEP_SUMMARY"))
+    run_parser.add_argument("--results", type=Path, help="通知に使う結果の JSON を書き出す")
+
+    notify = commands.add_parser(
+        "notify", help="巡回結果を Slack に通知する(Webhook URL は環境変数 SLACK_WEBHOOK_URL)"
+    )
+    mode = notify.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--results", type=Path, help="run --results で書き出した JSON")
+    mode.add_argument("--test", action="store_true", help="設定を確かめるテスト通知を送る")
 
     args = parser.parse_args(argv)
     if args.command == "validate-config":
         return _validate_config(args.path)
     if args.command == "run":
-        return _run(args.targets, args.snapshots, args.ids, args.summary, crawler or Crawler())
+        return _run(
+            args.targets, args.snapshots, args.ids, args.summary, args.results, crawler or Crawler()
+        )
+    if args.command == "notify":
+        return _notify(args.results, test=args.test)
     return _fetch(args.targets, args.ids, args.save_dir, args.summary, crawler or Crawler())
 
 
@@ -113,7 +128,12 @@ def _fetch(
 
 
 def _run(
-    path: Path, snapshots: Path, ids: list[str] | None, summary: Path | None, crawler: Crawler
+    path: Path,
+    snapshots: Path,
+    ids: list[str] | None,
+    summary: Path | None,
+    results_path: Path | None,
+    crawler: Crawler,
 ) -> int:
     targets = _load(path)
     if targets is None:
@@ -123,13 +143,44 @@ def _run(
         if unknown:
             print(f"不明な id: {', '.join(sorted(unknown))}", file=sys.stderr)
             return 1
-    results = run(targets, SnapshotStore(snapshots), crawler, forced_ids=set(ids) if ids else None)
+    checked_at = datetime.now(UTC)
+    results = run(
+        targets,
+        SnapshotStore(snapshots),
+        crawler,
+        forced_ids=set(ids) if ids else None,
+        now=lambda: checked_at,
+    )
+    if results_path:
+        write_results(results_path, results, checked_at)
     rows = [_result_row(r) for r in results]
     for row in rows:
         print("\t".join(row))
     if summary:
         _write_summary(summary, rows, title="巡回結果")
     # 失敗は state.json に記録し、続いたら通知する。ワークフローは失敗させない
+    return 0
+
+
+def _notify(results_path: Path | None, *, test: bool) -> int:
+    if test:
+        notices = [Notice(kind="test", name="", url="", detected_at=datetime.now(UTC))]
+    else:
+        assert results_path is not None
+        notices = notices_from_results(results_path, repository_url())
+    if not notices:
+        print("通知することはありません")
+        return 0
+    webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
+    if not webhook_url:
+        print("環境変数 SLACK_WEBHOOK_URL が設定されていません", file=sys.stderr)
+        return 1
+    try:
+        send(webhook_url, notices)
+    except NotifyError as e:
+        print(f"通知に失敗しました: {e}", file=sys.stderr)
+        return 1
+    print(f"{len(notices)} 件を Slack に通知しました")
     return 0
 
 

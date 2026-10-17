@@ -22,6 +22,8 @@
     GitHub Actions では `Watch` ワークフローの手動実行で同じことをする)
   - `uv run python -m signal_watch run --snapshots <dir> [--id <id>]`(巡回して変更を保存する。`<dir>` は
     `snapshots` ブランチの作業ディレクトリで、対象ごとにコミットする。push はしない。本番は `Watch` ワークフローが実行する)
+  - `uv run python -m signal_watch notify --results <json> | --test`(Slack に通知する。Webhook URL は環境変数
+    `SLACK_WEBHOOK_URL`。手元では使わず、`Watch` ワークフローの手動実行の `test_notification` で確かめる)
   - 対話シェルでは `.venv` が自動で有効になる(`~/.bashrc`)ので、`uv run` を省いて `pytest` などと打ってもよい
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
