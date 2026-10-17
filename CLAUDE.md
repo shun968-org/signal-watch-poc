@@ -24,6 +24,8 @@
 - 依存を足したら `uv lock` して `uv.lock` もコミットする。`pyproject.toml` の `exclude-newer` より新しい版は入らない
 - Node.js は lefthook / commitlint のために使っている(`package.json`)。実装に別の言語を使う場合も残す
 - CI の `repo-checks` は ADR 書式・lint・書式・型検査・テスト・`targets.yaml`・PR タイトル・ブランチ名を検査する
+- Slack 通知(Incoming Webhook)のアプリは `docs/slack-app-manifest.yml` から作る(手順はファイル冒頭)。
+  Webhook URL は GitHub Actions の Secret `SLACK_WEBHOOK_URL` にだけ置く。エージェントは URL を受け取らない
 - 監視対象を増やすときは、そのサイトの利用規約・robots.txt を確認してから `targets.yaml` に足す。
   新しいドメインは `src/signal_watch/config.py` の `ALLOWED_DOMAINS` と `init-firewall.sh` の両方に足す
 

@@ -1,0 +1,26 @@
+# signal-watch-poc の通知用 Slack アプリのマニフェスト(基本設計 F-07)。
+# Incoming Webhook だけを使う。メッセージの読み取りなど、ほかの権限は付けない。
+#
+# 作り方:
+#   1. https://api.slack.com/apps で「Create New App」→「From a manifest」を選び、ワークスペースを選ぶ
+#   2. 形式に YAML を選び、このファイルの内容を貼り付けて「Create」を押す
+#   3. 「Install to Workspace」を押し、通知を投稿するチャンネルを選んで許可する
+#   4. 「Incoming Webhooks」のページに Webhook URL が表示される
+#      (URL はマニフェストでは作れず、インストール時に選んだチャンネルごとに発行される)
+#   5. URL を GitHub Actions の Secret に登録する。値は入力を求められたときに貼り付ける
+#        gh secret set SLACK_WEBHOOK_URL -R shun968-org/signal-watch-poc
+#
+# Webhook URL は、知っていれば誰でもそのチャンネルに投稿できる秘密情報。
+# リポジトリ・Issue・PR・チャット・.env には書かない。漏れたら Slack のアプリ設定で URL を作り直し、Secret を登録し直す。
+display_information:
+  name: signal-watch-poc
+  description: デジタル庁サイトの更新を検出し、変更箇所を通知する(試作)
+  background_color: "#1d4ed8"
+oauth_config:
+  scopes:
+    bot:
+      - incoming-webhook
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
