@@ -47,6 +47,8 @@ jobs:
         with:
           version: "0.12.0"
           python-version: "3.13"
+          # 定期実行がキャッシュを書き込まないようにする(依存は少なく、キャッシュの効果も小さい)
+          enable-cache: false
 
       - run: uv sync --locked --no-dev
 
