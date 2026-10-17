@@ -5,6 +5,7 @@ description = "公開 Web ページの更新を検出し、変更箇所を提示
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
+    "beautifulsoup4>=4.15.0",
     "pyyaml>=6.0.3",
     "requests>=2.34.2",
 ]
