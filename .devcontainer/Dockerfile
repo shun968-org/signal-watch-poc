@@ -55,6 +55,12 @@ RUN curl -fsSL https://ntn.dev | bash \
     && NTN_BIN="$(bash -lc 'command -v ntn')" \
     && [ "$NTN_BIN" = "/home/vscode/.local/bin/ntn" ] || ln -sf "$NTN_BIN" /home/vscode/.local/bin/ntn
 
+# Slack CLI(通知用の Slack アプリを扱う。docs/slack-app-manifest.yml)。公式のインストールスクリプトで入れる。
+# スクリプトは ~/.slack/bin/slack に置くので、PATH に載っている ~/.local/bin にリンクする。
+# 認証情報(~/.slack/credentials.json)はボリュームにしていないので、rebuild すると消える(slack login し直す)。
+RUN curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash \
+    && ln -sf /home/vscode/.slack/bin/slack /home/vscode/.local/bin/slack
+
 # 対話シェルを開いたら uv の仮想環境(/workspace/.venv)を有効にする。
 # .venv は postCreateCommand の `uv sync` で作られるので、まだ無いときは何もしない。
 RUN echo '[ -f /workspace/.venv/bin/activate ] && . /workspace/.venv/bin/activate' >> /home/vscode/.bashrc

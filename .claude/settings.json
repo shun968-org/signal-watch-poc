@@ -10,6 +10,8 @@
       "Edit(~/.aws/**)",
       "Read(~/.config/gh/**)",
       "Edit(~/.config/gh/**)",
+      "Read(~/.slack/credentials.json)",
+      "Edit(~/.slack/credentials.json)",
       "Edit(/**/.env*)",
       "Read(/**/.credentials*)",
       "Edit(/**/.credentials*)",
