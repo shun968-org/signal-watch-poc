@@ -1,0 +1,86 @@
+出典:「電子インボイス(JP PINT)」(デジタル庁)(https://www.digital.go.jp/policies/electronic_invoice)
+公共データ利用規約(第1.0版)に基づき、signal-watch-poc が本文のテキストを抽出・加工して作成
+
+JP PINT
+最終更新日:
+2026年10月9日
+日本におけるデジタルインボイスの標準仕様（JP PINT）を管理しています。
+お知らせ
+- 2026年10月9日
+- グローバルの取組を更新しました。
+- 民間事業者の取組（企業間取引編）を更新しました。
+- 2026年10月2日 日本のPeppol Certified Service Providerについてを更新しました。
+- 2026年8月28日 地方自治体・民間事業者の取組（ガバクラ利用料請求編）を更新しました。
+- 2026年8月14日 民間事業者の取組（政府調達編）を更新しました。
+- 2026年6月8日 JP PINT Specificationsを更新・公表しました。
+- Peppol BIS Standard Invoice JP PINT Ver. 1.1.3に更新・公表
+- JP BIS Self Billing Invoice Ver. 1.1.3に更新・公表
+- JP BIS Invoice for Non-tax Registered Businesses Ver. 1.1.3に更新・公表
+概要
+デジタル庁は、日本のPeppol Authority（Japan Peppol Authority）として、electronic invoiceの国際標準仕様である「Peppol（ペポル）」をベースとした日本におけるデジタルインボイスの標準仕様（JP PINT）の管理等を行っています。
+（参考）デジタル庁は、2021年9月より、OpenPeppolのメンバー（Japan Peppol Authority）として活動しています。
+JP PINT Specifications
+（最終更新日：2026年6月8日／初回掲載日：2021年12月1日）
+- Peppol BIS Standard Invoice JP PINT <https://docs.peppol.eu/poac/jp/upcoming/pint-jp/>
+- JP BIS Self Billing Invoice <https://docs.peppol.eu/poac/jp/upcoming/pint-jp-sb/>
+- JP BIS Invoice for Non-tax Registered Businesses <https://docs.peppol.eu/poac/jp/upcoming/pint-jp-ntr/>
+（参考）公表・更新情報（PDF／319KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/7d671ab3/20260612_plicies_electronic_invoice_doc_01.pdf>
+PINT／Wildcard Scheme implementation plan in Japan
+（最終更新日：2024年9月30日／初回掲載日：2023年9月1日）
+- Announcement of “PINT” and “Wildcard Scheme” implementation plan in Japan（PDF／75KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/4207e5c9/29240930_electronic_invoice_policy_01.pdf>
+OpenPeppolのメンバーシップについて
+日本の事業者がPeppol Certified Service Providerの認定を受けるためには、まず、OpenPeppolのメンバーシップを申請する必要があります。
+（参考）OpenPeppolのメンバーシップについて <https://www.digital.go.jp/policies/electronic_invoice/electronic_invoice_membership/>
+Peppol Certified Service Providerの認定等手続について
+（最終更新日：2024年9月13日／初回掲載日：2022年6月21日）
+日本におけるPeppol Certified Service Providerの認定等を受けるに際しては、下記のPASR（PA Specific Requirements）の内容を理解し、遵守する必要があります。
+- Japan PASR（Approved by the MC in the MC167 meeting on June 21st 2022） <https://openpeppol.atlassian.net/wiki/spaces/AF/pages/2889318401/Peppol+Authority+Specific+Requirements#List-of-Currently-Applicable-PASR>
+【日本の事業者】
+Peppol Certified Service Providerの認定を受けることを希望する日本の事業者は、下記のGuidance Noteに従った手続を完了させる必要があります。
+- Guidance Note of the Accreditation Process for new Peppol Service Provider（Ver.1.0）（PDF／232KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/21a78c9c/20220513_policies_electronic_invoice_guidancenote_01.pdf>
+上記の手続をする際、下記のPeppol Service Provider Agreementの内容を必ず事前に確認してください。
+- Peppol Service Provider Agreement (Ver.4.0.1) <https://openpeppol.atlassian.net/wiki/spaces/AF/pages/2891251733/Peppol+Interoperability+Framework+1+July+2022#B1.-Peppol-Agreements>
+【Peppol Certified Service Providerである国外事業者】
+日本の了承を受けることを希望するPeppol Certified Service Providerである国外事業者は、下記のGuidance Noteに従った手続を完了させる必要があります。
+- Guidance Note of the Acknowledgement Process for Internationally Accredited Peppol Certified Service Provider（Ver.1.0）（PDF／199KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/aa24894f/20220513_policies_electronic_invoice_guidancenote_02.pdf>
+日本のPeppol Certified Service Providerについて
+（最終更新日：2026年10月2日／初回掲載日：2022年8月12日）
+- 日本のPeppol Certified Service Provider一覧 <https://www.digital.go.jp/policies/electronic_invoice/list-japanese>
+サービスプロバイダーミーティング／ユーザーズミーティング
+（最終更新日：2026年7月3日／初回掲載日：2025年5月23日）
+【サービスプロバイダーミーティング】
+- 第4回 Peppol Certified Service Provider ミーティング（対面）（2026年6月26日及び29日）（PDF／481KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/c762815d/20260703_policies_electronic_invoice_outline_01.pdf>
+- 第3回 Peppol Certified Service Provider ミーティング（オンライン）（2026年4月22日）（PDF／391KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/291d4d75/20260424_policies_electronic_invoice_outline_01.pdf>
+- 第2回 Peppol Certified Service Provider ミーティング（対面）（2025年10月28日）（PDF／461KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/ea72fc88/20251030_policies_electronic_invoice_outline_01.pdf>
+- 第1回 Peppol Certified Service Provider ミーティング（対面）（2025年5月20日）（PDF／425KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/f9856473/20250523_policies_electronic_invoice_outline_01.pdf>
+【ユーザーズミーティング】
+- 第3回 GEPS e-invoice users’ meeting（オンライン）（2026年3月5日）（PDF／456KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/4c9e0d83/20260310_policies_electronic_invoice_outline_02.pdf>
+- 第2回 GEPS e-invoice users’ meeting（オンライン）（2026年3月4日）（PDF／596KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/d7e528e1/20260310_policies_electronic_invoice_outline_01.pdf>
+- 第1回 GEPS e-invoice users’ meeting（対面）（2025年11月10日）（PDF／398KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/ce2bf9f5/20251112_policies_electronic_invoice_outline_01.pdf>
+（参考）GEPSへのデジタルインボイス請求の実績があるサービス一覧（2026年5月29日）（PDF／288KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/7ccbe1f2/20260529_policies_electronic_invoice_outline_01.pdf>
+グローバルの取組
+（最終更新日：2026年10月9日／初回掲載日：2021年12月1日）
+デジタル庁は、Japan Peppol Authorityとして、様々なグローバルの取組を行っています。
+- Peppol Conference／Peppol Day <https://www.digital.go.jp/policies/electronic_invoice/global-activities#peppol-conference_peppol-day>
+- Exchange Summit <https://www.digital.go.jp/policies/electronic_invoice/global-activities#exchange-summit>
+- 国際会議等 <https://www.digital.go.jp/policies/electronic_invoice/global-activities#global-conference>
+- 当局間の会議 <https://www.digital.go.jp/policies/electronic_invoice/global-activities#bilateral-meeting>
+- Japan Peppol Team Meeting <https://www.digital.go.jp/policies/electronic_invoice/global-activities#japan-peppol-team-meeting>
+- Webinar <https://www.digital.go.jp/policies/electronic_invoice/global-activities#webinar>
+民間事業者の取組等
+【民間事業者の取組（政府調達編）】
+（最終更新日：2026年8月14日／初回掲載日：2025年5月2日）
+- デジタル庁 <https://www.digital.go.jp/policies/electronic_invoice/968e4487-0cbb-48e7-a090-e097d925b5e7>
+- 出入国在留管理庁 <https://www.digital.go.jp/policies/electronic_invoice/172d2f61-1531-434f-8498-c14cb9b7f6f9>
+- 財務省 <https://www.digital.go.jp/policies/electronic_invoice/84d11031-69a3-4c12-abd9-00ebdc23f290>
+- 国税庁 <https://www.digital.go.jp/policies/electronic_invoice/679b4cc3-5da9-405d-a60d-8f0baaffc2c6>
+【民間事業者の取組（企業間取引編）】
+（最終更新日：2026年10月9日／初回掲載日：2025年4月16日）
+- 令和8年度 <https://www.digital.go.jp/policies/electronic_invoice/3c928a7b-780d-4b2a-b309-f48fd32f83b8>
+- 令和7年度 <https://www.digital.go.jp/policies/electronic_invoice/1471d5cc-ab6c-4f9b-a9ad-35066f3ce014>
+【地方自治体・民間事業者の取組（ガバクラ利用料請求編）】
+（最終更新日：2026年8月28日／初回掲載日：2026年7月10日）
+- Peppolが輝かせる「主役」たち ～鶴岡市、デジタルインボイスの「自分ごと」化～（2026年8月26日）（PDF／485KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/90126622/20260828_policies_electronic_invoice_outline_01.pdf>
+- Peppolが輝かせる「主役」たち ～TKC、デジタルインボイス（受領）の「自分ごと」化～（2026年8月18日）（PDF／467KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/f13f407c/20260821_policies_electronic_invoice_outline_01.pdf>
+- Peppolが輝かせる「主役」たち ～NEC、デジタルインボイス（受領）の「自分ごと」化～（2026年7月31日）（PDF／448KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/e78c61d8/20260807_policies_electronic_invoice_outline_01.pdf>
+- Peppolが輝かせる「主役」たち ～住田町、デジタルインボイスの「自分ごと」化～（2026年7月2日）（PDF／455KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/7e76828a-b1ff-4b10-a04a-b7eca50ea360/a8a29878/20260710_policies_electronic_invoice_outline_01.pdf>
