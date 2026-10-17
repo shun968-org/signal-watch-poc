@@ -1,0 +1,45 @@
+name: Watch
+
+# 監視対象を巡回する(基本設計 F-02)。
+# 今は手動実行で取得までを行う。保存(snapshots ブランチ)と Slack 通知ができたら、
+# schedule(JST 9・12・15・18 時台)を足す(基本設計「移行・リリース計画」)。
+on:
+  workflow_dispatch:
+    inputs:
+      target_id:
+        description: 取得する監視対象の id(空なら有効な全対象)
+        required: false
+        default: ""
+
+# 手動実行と定期実行が重なって、対象サイトに同時にアクセスしないようにする
+concurrency:
+  group: watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # 外部の Action はコミット SHA で固定する(基本設計「非機能設計」)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+
+      - run: uv sync --locked --no-dev
+
+      - name: 取得
+        env:
+          TARGET_ID: ${{ inputs.target_id }}
+        run: |
+          args=()
+          [ -z "$TARGET_ID" ] || args+=(--id "$TARGET_ID")
+          uv run --no-dev python -m signal_watch fetch "${args[@]}"

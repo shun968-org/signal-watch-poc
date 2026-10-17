@@ -155,6 +155,10 @@ def test_fetch_command(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> No
     assert (tmp_path / "digital-news.html").read_bytes() == b"<html></html>"
     assert "取得\tdigital-news\t13 バイト" in capsys.readouterr().out
 
-    # 他の対象は 404 になるので失敗として数える
-    assert main(["fetch", "--targets", targets], crawler=crawler) == 1
+    # 他の対象は 404 になるので失敗として数え、ジョブサマリーにも出す
+    summary = tmp_path / "summary.md"
+    assert main(["fetch", "--targets", targets, "--summary", str(summary)], crawler=crawler) == 1
+    text = summary.read_text(encoding="utf-8")
+    assert "| 取得 | `digital-news` | 13 バイト |" in text
+    assert "| 失敗 | `digital-jpki-user-list` | HTTP 404 |" in text
     assert main(["fetch", "--targets", targets, "--id", "nope"], crawler=crawler) == 1
