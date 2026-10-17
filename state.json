@@ -1,0 +1,40 @@
+{
+  "targets": {
+    "digital-news": {
+      "last_checked_at": "2026-10-17T06:10:20.563389Z",
+      "last_changed_at": null,
+      "etag": "\"1792131828-gzip\"",
+      "last_modified": "Fri, 16 Oct 2026 06:23:48 GMT",
+      "consecutive_failures": 0,
+      "last_error": null,
+      "failure_notified": false
+    },
+    "digital-account-numbering-designate": {
+      "last_checked_at": "2026-10-17T06:10:20.563389Z",
+      "last_changed_at": null,
+      "etag": "\"1792131219-gzip\"",
+      "last_modified": "Fri, 16 Oct 2026 06:13:39 GMT",
+      "consecutive_failures": 0,
+      "last_error": null,
+      "failure_notified": false
+    },
+    "digital-jpki-user-list": {
+      "last_checked_at": "2026-10-17T06:10:20.563389Z",
+      "last_changed_at": null,
+      "etag": "\"1792145020-gzip\"",
+      "last_modified": "Fri, 16 Oct 2026 10:03:40 GMT",
+      "consecutive_failures": 0,
+      "last_error": null,
+      "failure_notified": false
+    },
+    "digital-electronic-invoice": {
+      "last_checked_at": "2026-10-17T06:10:20.563389Z",
+      "last_changed_at": null,
+      "etag": "\"1792141346-gzip\"",
+      "last_modified": "Fri, 16 Oct 2026 09:02:26 GMT",
+      "consecutive_failures": 0,
+      "last_error": null,
+      "failure_notified": false
+    }
+  }
+}
