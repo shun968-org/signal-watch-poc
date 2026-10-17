@@ -12,6 +12,7 @@ from pathlib import Path
 from signal_watch.config import ConfigError, Target, load_targets
 from signal_watch.fetcher import Crawler, FetchError, NotModified
 from signal_watch.notifier import Notice, NotifyError, send
+from signal_watch.pruner import RETENTION_DAYS, prune
 from signal_watch.report import notices_from_results, repository_url, write_results
 from signal_watch.runner import Outcome, TargetResult, run
 from signal_watch.store import SnapshotStore
@@ -58,6 +59,13 @@ def main(argv: list[str] | None = None, *, crawler: Crawler | None = None) -> in
     mode.add_argument("--results", type=Path, help="run --results で書き出した JSON")
     mode.add_argument("--test", action="store_true", help="設定を確かめるテスト通知を送る")
 
+    prune_parser = commands.add_parser(
+        "prune", help="snapshots ブランチの、保存期間より古い履歴を1つにまとめる(push はしない)"
+    )
+    prune_parser.add_argument("--snapshots", type=Path, required=True)
+    prune_parser.add_argument("--days", type=int, default=RETENTION_DAYS)
+    prune_parser.add_argument("--dry-run", action="store_true", help="まとめる件数だけを表示する")
+
     args = parser.parse_args(argv)
     if args.command == "validate-config":
         return _validate_config(args.path)
@@ -65,6 +73,14 @@ def main(argv: list[str] | None = None, *, crawler: Crawler | None = None) -> in
         return _run(
             args.targets, args.snapshots, args.ids, args.summary, args.results, crawler or Crawler()
         )
+    if args.command == "prune":
+        result = prune(args.snapshots, now=datetime.now(UTC), days=args.days, dry_run=args.dry_run)
+        dry = "(dry run。変更していない)" if args.dry_run else ""
+        print(
+            f"{result.cutoff:%Y-%m-%d %H:%M} UTC より前の履歴: {result.squashed} 件をまとめる対象、"
+            f"積み直す履歴: {result.kept} 件{dry}"
+        )
+        return 0
     if args.command == "notify":
         return _notify(args.results, test=args.test)
     return _fetch(args.targets, args.ids, args.save_dir, args.summary, crawler or Crawler())
