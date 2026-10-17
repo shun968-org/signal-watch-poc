@@ -1,0 +1,11 @@
+出典:「預貯金口座付番制度に係る一部手続きの対象外となる金融機関」(デジタル庁)(https://www.digital.go.jp/policies/numbering-on-accounts/designate)
+公共データ利用規約(第1.0版)に基づき、signal-watch-poc が本文のテキストを抽出・加工して作成
+
+一部手続きの対象外となる金融機関
+最終更新日:
+2026年10月13日
+一部の金融機関に関しては、次に掲げる手続きの対象外となるため、ご注意ください。
+- 他の金融機関やマイナポータルを経由して、マイナンバーを届け出ること。
+- 相続時や災害時において、預貯金口座に関する情報の提供を受けること。
+- 相続時や災害時において、預貯金口座に関する情報の提供に係る照会を受け付けること。
+一部手続きの対象外となる金融機関一覧（Excel／15KB） <https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/194a5f8c-2889-4685-a958-cb948633d470/80b229dc/20261013_policies_numbering-on-accountsdesignate_outline_01%201.xlsx>
