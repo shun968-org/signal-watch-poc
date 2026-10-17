@@ -16,6 +16,11 @@ display_information:
   name: signal-watch-poc
   description: デジタル庁サイトの更新を検出し、変更箇所を通知する(試作)
   background_color: "#1d4ed8"
+# bot 用の権限(incoming-webhook)を付けるには bot ユーザーの定義が要る(無いと「Oauth requires bot_user」で作成できない)
+features:
+  bot_user:
+    display_name: signal-watch-poc
+    always_online: false
 oauth_config:
   scopes:
     bot:
