@@ -10,9 +10,21 @@ from urllib.parse import urlsplit
 
 import yaml
 
-# 取得してよいドメイン。利用規約・robots.txt を確認したサイトだけを足す
+
+@dataclass(frozen=True)
+class Source:
+    """取得元サイトの運営者と、コンテンツの利用規約(スナップショットの出典表示に使う)。"""
+
+    publisher: str
+    license: str
+
+
+# 取得してよいドメインと、その出典表示。利用規約・robots.txt を確認したサイトだけを足す
 # (.devcontainer/init-firewall.sh の「巡回対象の Web サイト」とも揃える)
-ALLOWED_DOMAINS = frozenset({"www.digital.go.jp"})
+SOURCES: dict[str, Source] = {
+    "www.digital.go.jp": Source(publisher="デジタル庁", license="公共データ利用規約(第1.0版)"),
+}
+ALLOWED_DOMAINS = frozenset(SOURCES)
 MIN_INTERVAL_HOURS = 1
 DEFAULT_INTERVAL_HOURS = 6
 
@@ -33,6 +45,12 @@ _KNOWN_KEYS = frozenset(
         "enabled",
     }
 )
+
+
+def source_of(url: str) -> Source:
+    """URL の取得元の出典表示。許可ドメインの URL であること(設定の検証で保証される)。"""
+    host = urlsplit(url).hostname
+    return SOURCES[host or ""]
 
 
 @dataclass(frozen=True)

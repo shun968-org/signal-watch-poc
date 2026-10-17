@@ -9,6 +9,8 @@ from pathlib import Path
 
 from signal_watch.config import ConfigError, Target, load_targets
 from signal_watch.fetcher import Crawler, FetchError, NotModified
+from signal_watch.runner import Outcome, TargetResult, run
+from signal_watch.store import SnapshotStore
 
 DEFAULT_TARGETS_PATH = Path("targets.yaml")
 
@@ -31,9 +33,23 @@ def main(argv: list[str] | None = None, *, crawler: Crawler | None = None) -> in
         help="結果の表(Markdown)を追記するファイル。既定は GitHub Actions のジョブサマリー",
     )
 
+    run_parser = commands.add_parser(
+        "run", help="取得間隔に達した対象を巡回し、変更をスナップショットに保存する"
+    )
+    run_parser.add_argument("--targets", type=Path, default=DEFAULT_TARGETS_PATH)
+    run_parser.add_argument(
+        "--snapshots", type=Path, required=True, help="snapshots ブランチの作業ディレクトリ"
+    )
+    run_parser.add_argument(
+        "--id", dest="ids", action="append", help="この対象だけを取得する(最小間隔 1 時間は守る)"
+    )
+    run_parser.add_argument("--summary", type=Path, default=os.environ.get("GITHUB_STEP_SUMMARY"))
+
     args = parser.parse_args(argv)
     if args.command == "validate-config":
         return _validate_config(args.path)
+    if args.command == "run":
+        return _run(args.targets, args.snapshots, args.ids, args.summary, crawler or Crawler())
     return _fetch(args.targets, args.ids, args.save_dir, args.summary, crawler or Crawler())
 
 
@@ -96,8 +112,42 @@ def _fetch(
     return 1 if any(status == "失敗" for status, _, _ in rows) else 0
 
 
-def _write_summary(path: Path, rows: list[tuple[str, str, str]]) -> None:
-    lines = ["## 取得結果", "", "| 結果 | 対象 | 詳細 |", "|---|---|---|"]
+def _run(
+    path: Path, snapshots: Path, ids: list[str] | None, summary: Path | None, crawler: Crawler
+) -> int:
+    targets = _load(path)
+    if targets is None:
+        return 1
+    if ids:
+        unknown = set(ids) - {t.id for t in targets}
+        if unknown:
+            print(f"不明な id: {', '.join(sorted(unknown))}", file=sys.stderr)
+            return 1
+    results = run(targets, SnapshotStore(snapshots), crawler, forced_ids=set(ids) if ids else None)
+    rows = [_result_row(r) for r in results]
+    for row in rows:
+        print("\t".join(row))
+    if summary:
+        _write_summary(summary, rows, title="巡回結果")
+    # 失敗は state.json に記録し、続いたら通知する。ワークフローは失敗させない
+    return 0
+
+
+def _result_row(result: TargetResult) -> tuple[str, str, str]:
+    detail = result.detail
+    if result.commit:
+        detail += f"(コミット {result.commit[:7]})"
+    if result.recovered:
+        detail += "(回復)"
+    if result.outcome is Outcome.FAILED and result.notify_failure:
+        detail += "(通知対象)"
+    return (result.outcome.value, result.target.id, detail)
+
+
+def _write_summary(
+    path: Path, rows: list[tuple[str, str, str]], *, title: str = "取得結果"
+) -> None:
+    lines = [f"## {title}", "", "| 結果 | 対象 | 詳細 |", "|---|---|---|"]
     lines += [
         f"| {status} | `{target_id}` | {detail.replace('|', '\\|')} |"
         for status, target_id, detail in rows
