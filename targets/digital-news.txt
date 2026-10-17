@@ -2,7 +2,6 @@
 公共データ利用規約(第1.0版)に基づき、signal-watch-poc が本文のテキストを抽出・加工して作成
 
 新着・更新
-- アナログ規制見直しの取組の「新規法令等のデジタル原則適合性確認等プロセス」の資料を更新しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/digital-extraordinary-administrative-research-committee>
 - マイナンバーカード・インフォ（民間事業者向け情報）Vol.156を掲載しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/mynumber/private-business/info>
 - デジタル推進委員向けのデジタル情報をまとめて案内するページ「教える人のためのデジタル情報ひろば」を更新しました 政策 2026年10月16日 <https://www.digital.go.jp/policies/digital_promotion_staff/curation>
 - 医療DXに関するダッシュボードを更新しました 資料 2026年10月16日 <https://www.digital.go.jp/resources/govdashboard/healthcare-dx>
