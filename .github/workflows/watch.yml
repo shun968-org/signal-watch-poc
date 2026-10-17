@@ -13,7 +13,7 @@ on:
         required: false
         default: ""
       test_notification:
-        description: Slack にテスト通知だけを送る(巡回はしない。Secret の SLACK_WEBHOOK_URL の確認用)
+        description: Slack にテスト通知だけを送る(巡回はしない。SLACK_WEBHOOK_URL と AI 要約の確認用)
         type: boolean
         default: false
 
@@ -50,10 +50,19 @@ jobs:
 
       - run: uv sync --locked --no-dev
 
+      # AI 要約に使う Claude Code(ADR-0004)。版を固定する
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - run: npm install -g @anthropic-ai/claude-code@2.1.288
+
+      # 通知のステップには Claude のサブスクリプションのトークンだけを渡す。
+      # API キー(ANTHROPIC_API_KEY など)は Secret にもここにも置かない(従量課金になるため。ADR-0004)
       - name: テスト通知
         if: ${{ inputs.test_notification }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: uv run --no-dev python -m signal_watch notify --test
 
       - name: コミットする人を設定
@@ -83,4 +92,5 @@ jobs:
         if: ${{ !inputs.test_notification }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: uv run --no-dev python -m signal_watch notify --results "$RUNNER_TEMP/results.json"
