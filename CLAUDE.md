@@ -31,7 +31,9 @@
 - `Watch` ワークフロー(`.github/workflows/watch.yml`)は JST 9・12・15・18 時台に定期実行し、取得間隔に達した対象を
   巡回して、変更を `snapshots` に保存し Slack に通知する。手動実行では対象の id 指定とテスト通知ができる
 - `snapshots` ブランチ: 監視対象ごとの抽出テキスト(`targets/<id>.txt`、先頭に出典表示)と実行状態(`state.json`)。
-  `Watch` ワークフローだけがコミットする(ルールセットの対象外)。手で編集しない
+  `Watch` ワークフローだけがコミットする(ルールセットの対象外)。手で編集しない。
+  履歴は1か月保存で、`Prune snapshots` ワークフローが毎月1日に古い履歴をまとめて強制 push する
+  (それまでの通知の差分リンクは開けなくなる。受け入れ済み)。`python -m signal_watch prune --snapshots <dir> --dry-run` で件数を確かめられる
 - Slack 通知(Incoming Webhook)のアプリは `docs/slack-app-manifest.yml` から作る(手順はファイル冒頭)。
   Webhook URL は GitHub Actions の Secret `SLACK_WEBHOOK_URL` にだけ置く。エージェントは URL を受け取らない
 - AI 要約(ADR-0004)は Claude Code のヘッドレスモードを、サブスクリプションのトークン(Secret `CLAUDE_CODE_OAUTH_TOKEN`)で

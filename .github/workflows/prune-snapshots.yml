@@ -1,0 +1,72 @@
+name: Prune snapshots
+
+# snapshots ブランチの、1か月より古い履歴を1つの起点コミットにまとめる(基本設計 F-11・REQ-018)。
+# 履歴を書き換えて強制 push するので、それまでの通知の「差分を見る」のリンクは開けなくなる
+# (2026-10-17 に受け入れると決定)。最新のスナップショットと state.json の内容は変わらない。
+on:
+  # 毎月1日 17:47 UTC(2日 02:47 JST)
+  schedule:
+    - cron: "47 17 1 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: まとめる件数だけを表示し、履歴は変えない
+        type: boolean
+        default: true
+
+# Watch と同じグループにして、巡回中に履歴を書き換えないようにする
+concurrency:
+  group: watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # snapshots ブランチへの強制 push
+    steps:
+      # 外部の Action はコミット SHA で固定する(基本設計「非機能設計」)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: snapshots
+          path: .snapshots
+          fetch-depth: 0 # 履歴をすべて取る
+
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+
+      - run: uv sync --locked --no-dev
+
+      - name: コミットする人を設定
+        run: |
+          git -C .snapshots config user.name "github-actions[bot]"
+          git -C .snapshots config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 古い履歴をまとめる
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          echo "BEFORE=$(git -C .snapshots rev-parse HEAD)" >> "$GITHUB_ENV"
+          args=(--snapshots .snapshots)
+          [ "$DRY_RUN" != "true" ] || args+=(--dry-run)
+          uv run --no-dev python -m signal_watch prune "${args[@]}"
+
+      - name: snapshots ブランチに強制 push
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if [ "$(git -C .snapshots rev-parse HEAD)" = "$BEFORE" ]; then
+            echo "まとめる履歴が無かったので push しない"
+            exit 0
+          fi
+          # 取得してから他の push が入っていたら失敗させる(巡回の結果を消さない)
+          git -C .snapshots push --force-with-lease="snapshots:$BEFORE" origin HEAD:snapshots
